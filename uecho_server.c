@@ -33,8 +33,8 @@ int main()
 
     memset(&server_addr, 0, sizeof(server_addr));
     server_addr.sin_family = AF_INET;
-    server_addr.sin_port = PORT;
-    server_addr.sin_addr.s_addr = htons(INADDR_ANY);
+    server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    server_addr.sin_port = htons(PORT);
     
     if (bind(server_socket, (const struct sockaddr*)&server_addr, sizeof(server_addr)) != 0)
     {
@@ -46,10 +46,11 @@ int main()
 
     for(;;)
     {
-        str_len = recvfrom(server_socket, massage, BUFFER_SIZE, 0, (struct sockaddr*)&client_addr, &client_addr_len);
-        for (size_t i; i < str_len; ++i)
-            putchar(massage[i]);
-        sendto(server_socket, massage, str_len, 0, (struct sockaddr*)&client_addr, client_addr_len);
+        client_addr_len = sizeof(client_addr);
+        str_len = recvfrom(server_socket, massage, BUFFER_SIZE, 0,
+            (struct sockaddr*)&client_addr, &client_addr_len);
+        sendto(server_socket, massage, str_len, 0, 
+            (struct sockaddr*)&client_addr, client_addr_len);
     } 
     close(server_socket);
     return 0;
