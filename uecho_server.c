@@ -1,16 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <fcntl.h>
-#include <netinet/tcp.h>
-#include <sys/socket.h>
-#include <sys/stat.h>
-#include <sys/uio.h>
-#include <sys/un.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
-#include <netdb.h>
-#include <netinet/in.h>
 #include <unistd.h>
 
 #define BUFFER_SIZE 1200
