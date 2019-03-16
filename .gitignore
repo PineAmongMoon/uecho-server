@@ -51,4 +51,5 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-uecho_server
+# my setting
+.DS_Store
