@@ -1,21 +1,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <stdarg.h>
+
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
 
-#define BUFFER_SIZE 1056
+
+#define BUFFER_SIZE 1500
 #define PORT 60000
+
 
 void mainloop(int server_socket);
 void create_sock(int * sock);
 void create_addr(struct sockaddr_in * sock_addr, uint32_t host, uint16_t port);
+void write_log(const char *restrict format, ... );
+
+
+char log_file_name[100];
+
 
 int main(int argc, char const *argv[])
 {
     int server_socket;
     struct sockaddr_in server_addr;
+
+    sprintf(log_file_name, "uecho.log");
 
     create_sock(&server_socket);
 
@@ -27,11 +39,14 @@ int main(int argc, char const *argv[])
         exit(2);
     }
 
+    write_log("server start!\n");
+
     mainloop(server_socket);
 
     close(server_socket);
     return 0;
 }
+
 
 void create_sock(int * sock)
 {
@@ -64,5 +79,25 @@ void mainloop(int server_socket)
             (struct sockaddr*)&client_addr, &client_addr_len);
         sendto(server_socket, massage, str_len, 0, 
             (struct sockaddr*)&client_addr, client_addr_len);
+     write_log(
+            "%s:%u sent %lu byte(s)\n",
+            inet_ntoa(client_addr.sin_addr),
+            ntohs(client_addr.sin_port),
+            str_len
+        );
     }
+}
+
+void write_log(const char *restrict format, ... )
+{
+    static time_t t;
+    static FILE * log_file;
+    va_list args;
+
+    log_file = fopen(log_file_name, "a");
+    time(&t);
+    fprintf(log_file, "UTC: %s", asctime(gmtime(&t)));
+    va_start(args, format);
+    vfprintf(log_file, format, args);
+    fclose(log_file);
 }
