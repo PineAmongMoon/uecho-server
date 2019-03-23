@@ -1,10 +1,10 @@
-FROM gcc:6
+FROM gcc:latest
 
 WORKDIR /root/uecho_server
 
 COPY uecho_server.c .
 
-RUN make uecho_server
+RUN gcc *.c
 
 EXPOSE 60000/udp
 
