@@ -8,7 +8,7 @@
             "type": "shell",
             "command": "clang",
             "args": [
-                "-g", "uecho_server.c"
+                "-g", "*.c"
             ]
         }
     ]
