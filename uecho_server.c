@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <stdarg.h>
@@ -8,6 +7,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
+#include "errors.h"
 
 #define BUFFER_SIZE 1500
 #define PORT 60000
@@ -35,8 +35,7 @@ int main(int argc, char const *argv[])
     
     if (bind(server_socket, (const struct sockaddr*)&server_addr, sizeof(server_addr)) != 0)
     {
-        perror("bind error!");
-        exit(2);
+        error_handle(2);
     }
 
     write_log("server start!\n");
@@ -53,8 +52,7 @@ void create_sock(int * sock)
     *sock = socket(PF_INET, SOCK_DGRAM, 0);
     if (*sock == -1)
     {
-        perror("UDP scoket creation error!");
-        exit(1);
+        error_handle(1);
     }
 }
 
